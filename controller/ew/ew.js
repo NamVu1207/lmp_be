@@ -8,6 +8,12 @@ const listHouse = async (req, res, next) => {
   return;
 };
 
+const listRoom = async (req, res, next) => {
+  const result = await ewModel.GetListRoom();
+  res.status(200).json({ status: 200, success: true, data: result });
+  return;
+};
+
 const getEw = async (req, res, next) => {
   const house_id = req.body.house_id;
   const dateN = req.body.date;
@@ -16,31 +22,20 @@ const getEw = async (req, res, next) => {
   return;
 };
 
-const listRoom = async (req, res, next) => {
-  const result = await ewModel.GetListRoom();
-  res.status(200).json({ status: 200, success: true, data: result });
+const CheckRoom = async (req, res, next) => {
+  const houseId = req.body.house_id;
+  const roomName = req.body.room_name;
+  let result;
+  const checkRoom = await ewModel.CheckRoom(houseId, roomName);
+  if (checkRoom.length > 0) result = { success: true, data: checkRoom[0] };
+  else
+    result = {
+      success: false,
+      data: "phòng không tồn tại hoặc chưa được thuê",
+    };
+  res.status(200).json({ status: 200, ...result });
   return;
 };
-// const AddDepartment = async (req, res, next) => {
-//   let datas = req.body.datas;
-//   let outputs = {};
-//   let arr_msg = [];
-//   if (datas.length) {
-//     for await (let data of datas) {
-//       const item = {
-//         "departmentID": data.departmentID,
-//         "checkin": data.checkin,
-//         "checkout": data.checkout,
-//         "dateN": data.dateN,
-//       };
-//       const result = await departmentModel.AddDepartment(item);
-//       arr_msg.push(result);
-//     }
-//     outputs["message"] = arr_msg;
-//   }
-//   res.status(200).json({ status: 200, success: true, data: outputs });
-//   return;
-// };
 
 const deleteEw = async (req, res, next) => {
   let datas = req.body.data;
@@ -73,10 +68,9 @@ const AddEw = async (req, res, next) => {
   let arr_msg = [];
   if (datas.length > 0) {
     for await (let data of datas) {
-      const houseId = data.house_id;
-      const roomName = data.room_name;
       const isNewEdit = data?.isNew ? "N" : data?.isEdit ? "E" : "";
       const ewId = data?.ew_id ?? 0;
+      const contractId = data.contract_id;
       const item = {
         "elec_start": Number(data.elec_start),
         "elec_end": Number(data.elec_end),
@@ -89,9 +83,8 @@ const AddEw = async (req, res, next) => {
       };
       const result = await ewModel.AddEw(
         ewId,
-        houseId,
-        roomName,
         isNewEdit,
+        contractId,
         item
       );
       arr_msg.push(result);
@@ -102,4 +95,4 @@ const AddEw = async (req, res, next) => {
   return;
 };
 
-module.exports = { listHouse, getEw, listRoom, deleteEw, AddEw };
+module.exports = { listHouse, getEw, listRoom, deleteEw, AddEw, CheckRoom };

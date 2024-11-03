@@ -6,6 +6,7 @@ const ew = require("./ew");
 
 router.post("/listhouse", auth, ew.listHouse);
 router.post("/listroom", auth, ew.listRoom);
+router.post("/checkroom", auth, ew.CheckRoom);
 router.post("/getew", auth, ew.getEw);
 router.post("/deleteEw", auth, ew.deleteEw);
 router.post("/addew", auth, ew.AddEw);

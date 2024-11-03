@@ -4,7 +4,7 @@ const {Encrypt} = require('../service/authenticate')
 
 const checkUser = (username, password, userType) => {
     return new Promise(async (resolve, reject) => {
-        db('employees').select('*')
+        db('employee').select('*')
             .where({
                 "username": username,
                 "pass": password,

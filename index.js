@@ -78,6 +78,10 @@ class Server {
     app.use("/auth", require("./controller/login"));
     app.use("/ew", require("./controller/ew"));
     app.use("/booking", require("./controller/booking"));
+    app.use("/service", require("./controller/service"));
+    app.use("/customer", require("./controller/customer"));
+    app.use("/listroom", require("./controller/listroom"));
+    app.use("/rentalfee", require("./controller/rentalfee"));
   }
 }
 module.exports = Server;
