@@ -1,6 +1,7 @@
 const moment = require("moment-timezone");
 const { db } = require("../../config/database");
 const roomModel = require("../../model/roomModel");
+const cusModel = require("../../model/customerModel");
 
 const GetRoom = async (req, res, next) => {
   let { is_rented = "", room_name = "" } = req.body;
@@ -82,17 +83,29 @@ const DeleteHouse = async (req, res, next) => {
 };
 
 const AddContract = async (req, res, next) => {
-  const renter = req.body.renter;
-  const contract = req.body.contract;
-  const result = await roomModel.AddContract(renter, contract);
-  if (result.length > 0)
-    res
-      .status(200)
-      .json({ status: 200, success: true, message: "đã tạo hợp đồng" });
-  else
-    res
-      .status(200)
-      .json({ status: 200, success: false, message: "tạo hợp đồng thất bại" });
+  const { renter, contract, customer } = req.body;
+  let outputs = {};
+  let arr_msg = [];
+  const idContract = await roomModel.AddContract(renter, contract);
+  if (idContract.length > 0) {
+    for await (let data of customer) {
+      const customerId = 0;
+      const contractId = idContract[0].id;
+      const item = {
+        cus_name: data.cus_name,
+        gender: data.gender,
+        phone: data.phone,
+        birthday: moment(data.birthday).format("YYYY-MM-DD"),
+        email: data.email,
+        cccd: data.cccd,
+        cus_address: data.cus_address,
+      };
+      const result = await cusModel.save(customerId, contractId, item);
+      arr_msg.push(result);
+    }
+    outputs = { message: arr_msg };
+  }
+  res.status(200).json({ status: 200, success: true, data: outputs });
   return;
 };
 

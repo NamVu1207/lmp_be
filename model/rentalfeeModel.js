@@ -15,7 +15,6 @@ const getBill = async (room_name, house_id, month) => {
   const currentMonth = moment(month).month() + 1;
   const currentYear = moment(month).year();
   const validroom = await CheckRoom(house_id, room_name);
-
   if (validroom.length > 0) {
     const query = db("room as r")
       .select(
@@ -29,7 +28,7 @@ const getBill = async (room_name, house_id, month) => {
         "ew.water_cost",
         "ew.month_cons",
         "ew.year_cons",
-        "rf.payment_status",
+        // "rf.payment_status",
         db.raw(
           ` JSON_AGG(
                 CASE WHEN rs.id IS NOT NULL THEN
@@ -64,7 +63,7 @@ const getBill = async (room_name, house_id, month) => {
       .leftJoin("services as serv", "rs.service_id", "serv.id")
       .where("r.house_id", house_id)
       .where("r.room_name", room_name)
-      .groupBy("r.id", "cont.id", "ew.ew_id", "rf.payment_status");
+      .groupBy("r.id", "cont.id", "ew.ew_id");
     const result = await query.catch((err) => console.log(err));
     return { success: true, data: result };
   } else {
@@ -87,7 +86,7 @@ const submitBill = async (billInfo) => {
   } else return { success: false, message: "Thanh toán thất bại" };
 };
 
-const load = async (serv_name, house_id) => {
+const load = async (room_name, house_id, month) => {
   const query = db("rentalfee as rf")
     .select(
       "rf.*",
@@ -101,6 +100,13 @@ const load = async (serv_name, house_id) => {
     .leftJoin("house as h", "r.house_id", "h.id")
     .where("house_status", true)
     .where("room_status", true);
+  if (room_name) query.where("r.room_name", room_name);
+  if (house_id) query.where("h.id", house_id);
+  if (month) {
+    query
+      .where("rf.payment_month", moment(month).month() + 1)
+      .andWhere("rf.payment_year", moment(month).year());
+  }
   const result = await query.catch((err) => console.log(err));
   return result;
 };

@@ -47,6 +47,7 @@ const save = async (req, res, next) => {
         birthday: moment(data.birthday).format("YYYY-MM-DD"),
         email: data.email,
         cccd: data.cccd,
+        password: data?.password ? data.password : "123456",
         cus_address: data.cus_address,
       };
       const result = await cusModel.save(customerId, contractId, item);

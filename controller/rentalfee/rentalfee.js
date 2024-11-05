@@ -30,8 +30,8 @@ const submitBill = async (req, res, next) => {
 };
 
 const load = async (req, res, next) => {
-  let { serv_name = "", house_id = "" } = req.body;
-  const result = await rfModel.load(serv_name, house_id);
+  let { room_name = "", house_id = "", month = "" } = req.body;
+  const result = await rfModel.load(room_name, house_id, month);
   res.status(200).json({ status: 200, success: true, data: result });
   return;
 };

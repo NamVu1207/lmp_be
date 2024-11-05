@@ -89,7 +89,6 @@ const DeleteHouse = async (item) => {
 };
 
 const AddContract = async (renter, contract) => {
-  let idroom = [];
   let idCustomer;
   const existCustomer = await db("customer")
     .select("id")
@@ -99,7 +98,13 @@ const AddContract = async (renter, contract) => {
       .insert(renter)
       .returning("id")
       .catch((err) => console.log(err));
-  } else idCustomer = existCustomer;
+  } else {
+    idCustomer = await db("customer")
+      .where("id", existCustomer[0].id)
+      .update(renter)
+      .returning("id")
+      .catch((err) => console.log(err));
+  }
   const newContract = { ...contract, customer_id: idCustomer[0].id };
   const idContract = await db("contracts")
     .insert(newContract)
@@ -109,6 +114,10 @@ const AddContract = async (renter, contract) => {
     await db("room")
       .where("id", contract.room_id)
       .update({ "is_rented": "rented" });
+    await db("contract_cus").insert({
+      customer_id: idCustomer[0].id,
+      contract_id: idContract[0].id,
+    });
     return idContract;
   }
   return [];
