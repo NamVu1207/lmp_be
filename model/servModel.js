@@ -1,12 +1,13 @@
 const { db } = require("../config/database");
 const moment = require("moment-timezone");
 
-const GetService = async (serv_name, house_id) => {
+const GetService = async (serv_name, house_id, service_type) => {
   const query = db("services as serv")
     .select("serv.*", "h.house_name")
     .leftJoin("house as h", "serv.house_id", "h.id")
     .where("h.house_status", true);
   if (house_id) query.where("serv.house_id", house_id);
+  if (service_type) query.where("serv.service_type", service_type);
   if (serv_name) query.where("serv.serv_name", "like", `%${serv_name}%`);
   let result = await query.catch((err) => console.log(err));
   return result;

@@ -3,7 +3,8 @@ const moment = require("moment-timezone");
 
 const GetService = async () => {
   const query = db("services")
-    .select("house_id", "id", "serv_name", "price")
+    .select("house_id", "id", "serv_name", "price", "unit")
+    .where("service_type", "fixed")
     .where("active", true);
   let result = await query.catch((err) => console.log(err));
   return result;

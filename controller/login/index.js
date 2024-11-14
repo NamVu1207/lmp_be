@@ -31,6 +31,7 @@ router.post("/login", async (req, res) => {
           message: "Login Success",
           authorized: true,
           access_token: token,
+          user: user,
         });
       })
       .catch((err) => {

@@ -10,8 +10,8 @@ const listHouse = async (req, res, next) => {
 };
 
 const getService = async (req, res, next) => {
-  let { serv_name = "", house_id = "" } = req.body;
-  const result = await servModel.GetService(serv_name, house_id);
+  let { serv_name = "", house_id = "", service_type = "" } = req.body;
+  const result = await servModel.GetService(serv_name, house_id, service_type);
   res.status(200).json({ status: 200, success: true, data: result });
   return;
 };
@@ -27,6 +27,8 @@ const save = async (req, res, next) => {
         serv_name: data.serv_name,
         price: Number(data.price),
         house_id: Number(data.house_id),
+        unit: data.unit,
+        service_type: data.service_type,
         active: data.active,
         note: data.note,
       };

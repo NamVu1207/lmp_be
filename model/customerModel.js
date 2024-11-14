@@ -103,7 +103,6 @@ const DeleteCustomer = async (item = {}) => {
   const isRenter = await db("contracts")
     .select("id")
     .where("customer_id", item.id);
-  console.log(isRenter);
   if (isRenter.length > 0) {
     return { success: false, message: "không thể xóa người đứng tên hợp đồng" };
   } else {

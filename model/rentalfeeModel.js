@@ -28,7 +28,7 @@ const getBill = async (room_name, house_id, month) => {
         "ew.water_cost",
         "ew.month_cons",
         "ew.year_cons",
-        // "rf.payment_status",
+        "rf.payment_status",
         db.raw(
           ` JSON_AGG(
                 CASE WHEN rs.id IS NOT NULL THEN
@@ -63,7 +63,7 @@ const getBill = async (room_name, house_id, month) => {
       .leftJoin("services as serv", "rs.service_id", "serv.id")
       .where("r.house_id", house_id)
       .where("r.room_name", room_name)
-      .groupBy("r.id", "cont.id", "ew.ew_id");
+      .groupBy("r.id", "cont.id", "ew.ew_id", "rf.payment_status");
     const result = await query.catch((err) => console.log(err));
     return { success: true, data: result };
   } else {

@@ -86,6 +86,8 @@ class Server {
     app.use("/staff", require("./controller/Staff"));
     app.use("/other", require("./controller/otherfee"));
     app.use("/dashboard", require("./controller/dashboard"));
+    app.use("/order", require("./controller/Order"));
+    app.use("/home", require("./controller/home"));
   }
 }
 module.exports = Server;
