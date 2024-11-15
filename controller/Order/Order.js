@@ -9,6 +9,12 @@ const getService = async (req, res, next) => {
   res.status(200).json({ status: 200, success: true, data: result });
   return;
 };
+const changePassword = async (req, res, next) => {
+  let { customerId = "", newPaasword = "" } = req.body;
+  const result = await orderModel.ChangePassword(customerId, newPaasword);
+  res.status(200).json({ status: 200, success: true, data: result });
+  return;
+};
 
 const save = async (req, res, next) => {
   let datas = req.body.datas;
@@ -61,4 +67,5 @@ module.exports = {
   save,
   getService,
   confirm,
+  changePassword,
 };

@@ -80,4 +80,15 @@ const confirm = async (item = {}, type = "") => {
   } else return { success: false, message: "Xác nhận thất bại" };
 };
 
-module.exports = { getService, save, confirm };
+const ChangePassword = async (customerId, newPassword) => {
+  const id = await db("customer")
+    .where("id", Number(customerId))
+    .update({ password: newPassword })
+    .returning("id")
+    .catch((err) => console.log(err));
+  if (id.length > 0) {
+    return { success: true, message: "Thay dổi thành công" };
+  } else return { success: false, message: "Thay dổi thất bại" };
+};
+
+module.exports = { getService, save, confirm, ChangePassword };

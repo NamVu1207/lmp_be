@@ -12,7 +12,11 @@ const GetListCity = async () => {
 const GetHousebyCity = async (city = "") => {
   if (!city) return [];
   const query = db("house as h")
-    .distinct("h.*", "emp.employee_name", "emp.phone")
+    .distinct(
+      "h.*",
+      "emp.employee_name as manager_name",
+      "emp.phone as contact"
+    )
     .leftJoin("room as r", "r.house_id", "h.id")
     .leftJoin("employee as emp", "emp.id", "h.manager")
     .where("h.city", city)
