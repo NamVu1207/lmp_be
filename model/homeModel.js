@@ -4,6 +4,9 @@ const moment = require("moment-timezone");
 const GetListCity = async () => {
   const query = db("house as h")
     .distinct("h.city")
+    .leftJoin("room as r", "r.house_id", "h.id")
+    .where("r.room_status", true)
+    .where("r.is_rented", "available")
     .where("h.house_status", true);
   let result = await query.catch((err) => console.log(err));
   return result;
