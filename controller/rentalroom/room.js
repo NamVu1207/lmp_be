@@ -88,6 +88,10 @@ const AddContract = async (req, res, next) => {
   let arr_msg = [];
   const idContract = await roomModel.AddContract(renter, contract);
   if (idContract.length > 0) {
+    arr_msg.push({
+      success: true,
+      message: "Làm hợp đông thành công",
+    });
     for await (let data of customer) {
       const customerId = 0;
       const contractId = idContract[0].id;
